@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithm Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="light">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Sorting Algorithm Visualizer</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span class="sun"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                        width="24px" fill="currentColor">
+                        <path
+                            d="M480-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 80q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 97 100-53 56Zm492 496-97-100 53-56 101 97-57 59Zm-98-550 97-100 57 59-100 97-54-56ZM154-212l101-97 54 56-97 100-58-59Z" />
+                    </svg></span>
+                <span class="moon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                        viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                        <path
+                            d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z" />
+                    </svg></span>
+            </button>
+        </div>
+
+        <!-- Controls Card -->
+        <div class="card">
+            <!-- User Input -->
+            <div class="input-group">
+                <label>Enter Array Elements (comma-separated):</label>
+                <div class="input-row">
+                    <input type="text" id="userInput" placeholder="e.g., 64, 34, 25, 12, 22, 11, 90">
+                    <button class="btn btn-green" onclick="createArrayFromInput()">Create Array</button>
+                </div>
+            </div>
+
+            <!-- Random Array -->
+            <div class="input-group">
+                <label>Random Array Size:</label>
+                <div class="input-row">
+                    <input type="number" id="arraySize" value="20" min="5" max="50">
+                    <button class="btn btn-purple" onclick="generateRandomArray()">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#e3e3e3">
+                            <path
+                                d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+                        </svg>
+                        Generate Random
+                    </button>
+                </div>
+            </div>
+
+            <!-- Algorithm Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-algo" onclick="startSort('bubble')">Bubble Sort</button>
+                <button class="btn btn-algo" onclick="startSort('selection')">Selection Sort</button>
+                <button class="btn btn-algo" onclick="startSort('insertion')">Insertion Sort</button>
+                <button class="btn btn-algo" onclick="startSort('merge')">Merge Sort</button>
+                <button class="btn btn-algo" onclick="startSort('quick')">Quick Sort</button>
+                <button class="btn btn-algo" onclick="startSort('heap')">Heap Sort</button>
+                <button class="btn btn-red" id="stopBtn" style="display: none;" onclick="stopSort()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                        fill="#e3e3e3">
+                        <path
+                            d="M372-360h72v-240h-72v240Zm144 0h72v-240h-72v240ZM480.28-96Q401-96 331-126t-122.5-82.5Q156-261 126-331T96-480.43q0-41.14 8.5-80.86Q113-601 130-638l56 56q-8 25-13 50.5t-5 51.5q0 130 91 221t221 91q130 0 221-91t91-221q0-130-91-221t-220.84-91q-26.16 0-52 4.5Q402.33-783 377-775l-55-55q38-15 77.5-24.5T480-864q80 0 149.5 30t122 82.5Q804-699 834-629.28q30 69.73 30 149Q864-401 834-331t-82.5 122.5Q699-156 629.28-126q-69.73 30-149 30ZM228-672q-25 0-42.5-17.5T168-732q0-25 17.5-42.5T228-792q25 0 42.5 17.5T288-732q0 25-17.5 42.5T228-672Zm252 192Z" />
+                    </svg>Stop
+
+                </button>
+            </div>
+
+            <!-- Speed Control -->
+            <div class="speed-control">
+                <label>Animation Speed: <span id="speedValue">50</span></label>
+                <div class="speed-slider-container">
+                    <span class="speed-label">Slow</span>
+                    <div class="slider-wrapper">
+                        <input type="range" id="speedSlider" min="1" max="100" value="50"
+                            oninput="updateSpeed(this.value)">
+                        <div class="speed-markers">
+                            <span>1</span>
+                            <span>25</span>
+                            <span>50</span>
+                            <span>75</span>
+                            <span>100</span>
+                        </div>
+                    </div>
+                    <span class="speed-label">Fast</span>
+                </div>
+            </div>
+        </div>
+        <!-- Language Selector -->
+        <div class="lang-selector">
+            <button class="lang-btn active" data-lang="javascript" onclick="selectLanguage('javascript')">
+                <svg xmlns="http://www.w3.org/2000/svg" height="100" viewBox="0 -960 960 960" width="100"
+                    fill="#F19E39">
+                    <path
+                        d="M274-360q-15 0-24.5-9.5T240-394v-66h48v52h84v-192h48v206q0 15-9.5 24.5T386-360H274Zm240 0q-15 0-24.5-9.5T480-394v-46h48v32h104v-53H514q-14 0-24-10t-10-24v-71q0-15 9.5-24.5T514-600h132q15 0 24.5 9.5T680-566v46h-48v-32H528v53h118q14 0 24 10t10 24v71q0 15-9.5 24.5T646-360H514Z" />
+                </svg></span>
+            </button>
+            <button class="lang-btn" data-lang="python" onclick="selectLanguage('python')">
+                <span class="lang-icon"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100"
+                        viewBox="0 0 48 48">
+                        <path fill="#0277BD"
+                            d="M24.047,5c-1.555,0.005-2.633,0.142-3.936,0.367c-3.848,0.67-4.549,2.077-4.549,4.67V14h9v2H15.22h-4.35c-2.636,0-4.943,1.242-5.674,4.219c-0.826,3.417-0.863,5.557,0,9.125C5.851,32.005,7.294,34,9.931,34h3.632v-5.104c0-2.966,2.686-5.896,5.764-5.896h7.236c2.523,0,5-1.862,5-4.377v-8.586c0-2.439-1.759-4.263-4.218-4.672C27.406,5.359,25.589,4.994,24.047,5z M19.063,9c0.821,0,1.5,0.677,1.5,1.502c0,0.833-0.679,1.498-1.5,1.498c-0.837,0-1.5-0.664-1.5-1.498C17.563,9.68,18.226,9,19.063,9z">
+                        </path>
+                        <path fill="#FFC107"
+                            d="M23.078,43c1.555-0.005,2.633-0.142,3.936-0.367c3.848-0.67,4.549-2.077,4.549-4.67V34h-9v-2h9.343h4.35c2.636,0,4.943-1.242,5.674-4.219c0.826-3.417,0.863-5.557,0-9.125C41.274,15.995,39.831,14,37.194,14h-3.632v5.104c0,2.966-2.686,5.896-5.764,5.896h-7.236c-2.523,0-5,1.862-5,4.377v8.586c0,2.439,1.759,4.263,4.218,4.672C19.719,42.641,21.536,43.006,23.078,43z M28.063,39c-0.821,0-1.5-0.677-1.5-1.502c0-0.833,0.679-1.498,1.5-1.498c0.837,0,1.5,0.664,1.5,1.498C29.563,38.32,28.899,39,28.063,39z">
+                        </path>
+                    </svg></span>
+            </button>
+            <button class="lang-btn" data-lang="cpp" onclick="selectLanguage('cpp')">
+                <span class="lang-icon"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100"
+                        viewBox="0 0 48 48">
+                        <path fill="#00549d" fill-rule="evenodd"
+                            d="M22.903,3.286c0.679-0.381,1.515-0.381,2.193,0 c3.355,1.883,13.451,7.551,16.807,9.434C42.582,13.1,43,13.804,43,14.566c0,3.766,0,15.101,0,18.867 c0,0.762-0.418,1.466-1.097,1.847c-3.355,1.883-13.451,7.551-16.807,9.434c-0.679,0.381-1.515,0.381-2.193,0 c-3.355-1.883-13.451-7.551-16.807-9.434C5.418,34.899,5,34.196,5,33.434c0-3.766,0-15.101,0-18.867 c0-0.762,0.418-1.466,1.097-1.847C9.451,10.837,19.549,5.169,22.903,3.286z"
+                            clip-rule="evenodd"></path>
+                        <path fill="#0086d4" fill-rule="evenodd"
+                            d="M5.304,34.404C5.038,34.048,5,33.71,5,33.255 c0-3.744,0-15.014,0-18.759c0-0.758,0.417-1.458,1.094-1.836c3.343-1.872,13.405-7.507,16.748-9.38 c0.677-0.379,1.594-0.371,2.271,0.008c3.343,1.872,13.371,7.459,16.714,9.331c0.27,0.152,0.476,0.335,0.66,0.576L5.304,34.404z"
+                            clip-rule="evenodd"></path>
+                        <path fill="#fff" fill-rule="evenodd"
+                            d="M24,10c7.727,0,14,6.273,14,14s-6.273,14-14,14 s-14-6.273-14-14S16.273,10,24,10z M24,17c3.863,0,7,3.136,7,7c0,3.863-3.137,7-7,7s-7-3.137-7-7C17,20.136,20.136,17,24,17z"
+                            clip-rule="evenodd"></path>
+                        <path fill="#0075c0" fill-rule="evenodd"
+                            d="M42.485,13.205c0.516,0.483,0.506,1.211,0.506,1.784 c0,3.795-0.032,14.589,0.009,18.384c0.004,0.396-0.127,0.813-0.323,1.127L23.593,24L42.485,13.205z"
+                            clip-rule="evenodd"></path>
+                        <path fill="#fff" fill-rule="evenodd" d="M31 21H33V27H31zM38 21H40V27H38z" clip-rule="evenodd">
+                        </path>
+                        <path fill="#fff" fill-rule="evenodd" d="M29 23H35V25H29zM36 23H42V25H36z" clip-rule="evenodd">
+                        </path>
+                    </svg></span>
+            </button>
+            <button class="lang-btn" data-lang="java" onclick="selectLanguage('java')">
+                <span class="lang-icon"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100"
+                        viewBox="0 0 48 48">
+                        <path fill="#F44336"
+                            d="M23.65,24.898c-0.998-1.609-1.722-2.943-2.725-5.455C19.229,15.2,31.24,11.366,26.37,3.999c2.111,5.089-7.577,8.235-8.477,12.473C17.07,20.37,23.645,24.898,23.65,24.898z">
+                        </path>
+                        <path fill="#F44336"
+                            d="M23.878,17.27c-0.192,2.516,2.229,3.857,2.299,5.695c0.056,1.496-1.447,2.743-1.447,2.743s2.728-0.536,3.579-2.818c0.945-2.534-1.834-4.269-1.548-6.298c0.267-1.938,6.031-5.543,6.031-5.543S24.311,11.611,23.878,17.27z">
+                        </path>
+                        <g>
+                            <path fill="#1565C0"
+                                d="M32.084 25.055c1.754-.394 3.233.723 3.233 2.01 0 2.901-4.021 5.643-4.021 5.643s6.225-.742 6.225-5.505C37.521 24.053 34.464 23.266 32.084 25.055zM29.129 27.395c0 0 1.941-1.383 2.458-1.902-4.763 1.011-15.638 1.147-15.638.269 0-.809 3.507-1.638 3.507-1.638s-7.773-.112-7.773 2.181C11.683 28.695 21.858 28.866 29.129 27.395z">
+                            </path>
+                            <path fill="#1565C0"
+                                d="M27.935,29.571c-4.509,1.499-12.814,1.02-10.354-0.993c-1.198,0-2.974,0.963-2.974,1.889c0,1.857,8.982,3.291,15.63,0.572L27.935,29.571z">
+                            </path>
+                            <path fill="#1565C0"
+                                d="M18.686,32.739c-1.636,0-2.695,1.054-2.695,1.822c0,2.391,9.76,2.632,13.627,0.205l-2.458-1.632C24.271,34.404,17.014,34.579,18.686,32.739z">
+                            </path>
+                            <path fill="#1565C0"
+                                d="M36.281,36.632c0-0.936-1.055-1.377-1.433-1.588c2.228,5.373-22.317,4.956-22.317,1.784c0-0.721,1.807-1.427,3.477-1.093l-1.42-0.839C11.26,34.374,9,35.837,9,37.017C9,42.52,36.281,42.255,36.281,36.632z">
+                            </path>
+                            <path fill="#1565C0"
+                                d="M39,38.604c-4.146,4.095-14.659,5.587-25.231,3.057C24.341,46.164,38.95,43.628,39,38.604z">
+                            </path>
+                        </g>
+                    </svg></span>
+            </button>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content">
+            <!-- Code Display -->
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-icon" id="codeIcon"><svg xmlns="http://www.w3.org/2000/svg" height="35px"
+                            viewBox="0 -960 960 960" width="35px" fill="#F19E39">
+                            <path
+                                d="M274-360q-15 0-24.5-9.5T240-394v-66h48v52h84v-192h48v206q0 15-9.5 24.5T386-360H274Zm240 0q-15 0-24.5-9.5T480-394v-46h48v32h104v-53H514q-14 0-24-10t-10-24v-71q0-15 9.5-24.5T514-600h132q15 0 24.5 9.5T680-566v46h-48v-32H528v53h118q14 0 24 10t10 24v71q0 15-9.5 24.5T646-360H514Z" />
+                        </svg>
+                    </span>
+                    <span class="code-title" id="codeTitle">JavaScript Implementation</span>
+                </div>
+                <pre id="codeBlock" class="code-block"></pre>
+                <div id="currentLineIndicator" class="current-line-indicator" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                        fill="currentColor" style="vertical-align: middle; margin-right: 4px;">
+                        <path d="M320-200v-560l440 280-440 280Z" />
+                    </svg> Currently executing line <span id="currentLineNumber"></span>
+                </div>
+            </div>
+
+            <!-- Visualization Card -->
+            <div class="card">
+                <div id="arrayContainer" class="array-container"></div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-box unsorted"></div>
+                        <span>Unsorted</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box comparing"></div>
+                        <span>Comparing</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box swapping"></div>
+                        <span>Swapping</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box sorted"></div>
+                        <span>Sorted</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Algorithm Info Card -->
+        <div id="algoInfo" class="card" style="display: none;">
+            <h2 id="algoTitle"></h2>
+            <p id="algoDescription"></p>
+            <p id="algoHowItWorks"></p>
+
+            <div class="complexity-grid">
+                <div class="complexity-item best">
+                    <strong>Best Case:</strong>
+                    <span id="bestCase"></span>
+                </div>
+                <div class="complexity-item average">
+                    <strong>Average Case:</strong>
+                    <span id="avgCase"></span>
+                </div>
+                <div class="complexity-item worst">
+                    <strong>Worst Case:</strong>
+                    <span id="worstCase"></span>
+                </div>
+                <div class="complexity-item space">
+                    <strong>Space:</strong>
+                    <span id="spaceCase"></span>
+                </div>
+                <div class="complexity-item stable">
+                    <strong>Stable:</strong>
+                    <span id="stableCase"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="algorithms.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
